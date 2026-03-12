@@ -9,8 +9,8 @@ class TransactionRepositoryImpl implements TransactionRepository {
   TransactionRepositoryImpl(this.localDataSource);
 
   @override
-  Future<List<Transaction>> getTransactions() async {
-    return await localDataSource.getTransactions();
+  Future<List<Transaction>> getTransactions({TransactionType? type}) async {
+    return await localDataSource.getTransactions(type: type);
   }
 
   @override

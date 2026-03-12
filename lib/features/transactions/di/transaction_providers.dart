@@ -60,8 +60,8 @@ Future<double> availableBalance(AvailableBalanceRef ref) {
 }
 
 @riverpod
-Future<List<Transaction>> transactionHistory(TransactionHistoryRef ref) {
-  return ref.watch(getTransactionHistoryUseCaseProvider).call();
+Future<List<Transaction>> transactionHistory(TransactionHistoryRef ref, {TransactionType? type}) {
+  return ref.watch(getTransactionHistoryUseCaseProvider).call(type: type);
 }
 
 @riverpod

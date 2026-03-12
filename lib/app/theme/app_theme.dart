@@ -10,13 +10,17 @@ class AppTheme {
       colorScheme: ColorScheme.fromSeed(
         seedColor: _seedColor,
         brightness: Brightness.light,
-        surfaceContainerLowest: const Color(0xFFF8FAFC), // FFF on cards, but Scaffold is slightly blue-ish grey
+        surfaceContainerLowest: const Color(
+          0xFFF8FAFC,
+        ), // FFF on cards, but Scaffold is slightly blue-ish grey
         surface: Colors.white,
       ),
     );
 
     return baseTheme.copyWith(
-      scaffoldBackgroundColor: const Color(0xFFF1F5F9), // Light grey-blue background from design
+      scaffoldBackgroundColor: const Color(
+        0xFFF1F5F9,
+      ), // Light grey-blue background from design
       textTheme: GoogleFonts.interTextTheme(baseTheme.textTheme),
       cardTheme: CardThemeData(
         color: Colors.white,
@@ -29,7 +33,9 @@ class AppTheme {
       ),
       navigationRailTheme: const NavigationRailThemeData(
         backgroundColor: Colors.white,
-        indicatorColor: Colors.transparent, // No indicator shape, just icon/text color change
+        indicatorColor:
+            Colors
+                .transparent, // No indicator shape, just icon/text color change
         selectedIconTheme: IconThemeData(color: _seedColor, size: 24),
         unselectedIconTheme: IconThemeData(color: Color(0xFF64748B), size: 24),
         selectedLabelTextStyle: TextStyle(
@@ -42,13 +48,41 @@ class AppTheme {
           fontWeight: FontWeight.w500,
           fontSize: 14,
         ),
-        labelType: NavigationRailLabelType.all,
+        // Removed labelType: NavigationRailLabelType.all to allow default behavior
+      ),
+      navigationDrawerTheme: NavigationDrawerThemeData(
+        backgroundColor: Colors.white,
+        indicatorColor: _seedColor.withValues(alpha: 0.1),
+        indicatorShape: const StadiumBorder(),
+        iconTheme: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return const IconThemeData(color: _seedColor);
+          }
+          return const IconThemeData(color: Color(0xFF64748B));
+        }),
+        labelTextStyle: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return const TextStyle(
+              color: _seedColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            );
+          }
+          return const TextStyle(
+            color: Color(0xFF64748B),
+            fontWeight: FontWeight.w500,
+            fontSize: 14,
+          );
+        }),
       ),
       chipTheme: ChipThemeData(
         backgroundColor: Colors.white,
         selectedColor: _seedColor,
         secondarySelectedColor: _seedColor,
-        labelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
+        labelStyle: const TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.normal,
+        ),
         secondaryLabelStyle: const TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.bold,
@@ -77,10 +111,6 @@ class AppTheme {
         style: FilledButton.styleFrom(
           backgroundColor: _seedColor,
           foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         ),
       ),
     );

@@ -115,19 +115,9 @@ class FundCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 36,
-                  child: FilledButton.tonal(
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      textStyle: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    onPressed: () => _showSubscriptionDialog(context),
-                    child: const Text('Suscribirse'),
-                  ),
+                FilledButton.tonal(
+                  onPressed: () => _showSubscriptionDialog(context),
+                  child: const Text('Suscribirse'),
                 ),
               ],
             ),

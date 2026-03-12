@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../data/datasources/user_local_datasource.dart';
 import '../data/repositories/user_repository_impl.dart';
+import '../domain/entities/user.dart';
 import '../domain/repositories/user_repository.dart';
 import '../domain/usecases/get_user_info.dart';
 
@@ -25,4 +26,9 @@ GetUserInfoUseCase getUserInfoUseCase(Ref ref) {
   return GetUserInfoUseCase(
     repository: ref.watch(userRepositoryProvider),
   );
+}
+
+@riverpod
+Future<User> userInfo(Ref ref) {
+  return ref.watch(getUserInfoUseCaseProvider).call();
 }

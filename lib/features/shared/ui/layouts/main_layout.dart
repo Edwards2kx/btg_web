@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class MainLayout extends StatelessWidget {
-  const MainLayout({
-    super.key,
-    required this.navigationShell,
-  });
+import '../../../auth/di/user_injection.dart';
+
+class MainLayout extends ConsumerWidget {
+  const MainLayout({super.key, required this.navigationShell});
 
   /// The navigation shell and state for the current branch in the bottom
   /// navigation bar or navigation rail.
   final StatefulNavigationShell navigationShell;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final width = MediaQuery.sizeOf(context).width;
 
     // Use a threshold of 600px to switch between mobile and desktop/tablet layout
     if (width >= 600) {
-      return _buildLargeLayout(context);
+      return _buildLargeLayout(context, ref);
     } else {
       return _buildSmallLayout();
     }
@@ -33,31 +33,32 @@ class MainLayout extends StatelessWidget {
           NavigationDestination(
             icon: Icon(Icons.grid_view_outlined),
             selectedIcon: Icon(Icons.grid_view),
-            label: 'Dashboard',
+            label: 'Portafolio',
           ),
           NavigationDestination(
             icon: Icon(Icons.trending_up_outlined),
             selectedIcon: Icon(Icons.trending_up),
-            label: 'Invest',
+            label: 'Invertir',
           ),
           NavigationDestination(
             icon: Icon(Icons.history_outlined),
             selectedIcon: Icon(Icons.history),
-            label: 'History',
+            label: 'Historial',
           ),
           NavigationDestination(
             icon: Icon(Icons.person_outline),
             selectedIcon: Icon(Icons.person),
-            label: 'Profile',
+            label: 'Perfil',
           ),
         ],
       ),
     );
   }
 
-  Widget _buildLargeLayout(BuildContext context) {
+  Widget _buildLargeLayout(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+    final userAsync = ref.watch(userInfoProvider);
 
     return Scaffold(
       body: Row(
@@ -123,26 +124,24 @@ class MainLayout extends StatelessWidget {
 
                 // ── Navigation ────────────────────────────────────────────
                 Expanded(
-                  child: NavigationRail(
+                  child: NavigationDrawer(
                     selectedIndex: navigationShell.currentIndex,
                     onDestinationSelected: _goBranch,
-                    extended: true,
-                    minExtendedWidth: 260,
-                    destinations: const [
-                      NavigationRailDestination(
+                    children: const [
+                      NavigationDrawerDestination(
                         icon: Icon(Icons.grid_view_outlined),
                         selectedIcon: Icon(Icons.grid_view),
-                        label: Text('Dashboard'),
+                        label: Text('Portafolio'),
                       ),
-                      NavigationRailDestination(
+                      NavigationDrawerDestination(
                         icon: Icon(Icons.trending_up_outlined),
                         selectedIcon: Icon(Icons.trending_up),
-                        label: Text('Invest'),
+                        label: Text('Invertir'),
                       ),
-                      NavigationRailDestination(
+                      NavigationDrawerDestination(
                         icon: Icon(Icons.history_outlined),
                         selectedIcon: Icon(Icons.history),
-                        label: Text('History'),
+                        label: Text('Historial'),
                       ),
                     ],
                   ),
@@ -151,43 +150,55 @@ class MainLayout extends StatelessWidget {
                 // ── Profile ──────────────────────────────────────────────
                 Padding(
                   padding: const EdgeInsets.all(24.0),
-                  child: Row(
-                    children: [
-                      const CircleAvatar(
-                        radius: 18,
-                        backgroundImage: NetworkImage(
-                          'https://ui-avatars.com/api/?name=Camilo+Rodriguez&background=0D8ABC&color=fff',
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                  child: userAsync.when(
+                    data:
+                        (user) => Row(
                           children: [
-                            Text(
-                              'Camilo Rodriguez',
-                              style: textTheme.bodySmall?.copyWith(
-                                fontWeight: FontWeight.bold,
+                            CircleAvatar(
+                              radius: 18,
+                              backgroundImage: NetworkImage(
+                                'https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=0D8ABC&color=fff',
                               ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
                             ),
-                            Text(
-                              'Premium Member',
-                              style: textTheme.labelSmall?.copyWith(
-                                color: colorScheme.onSurfaceVariant,
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${user.firstName} ${user.lastName}',
+                                    style: textTheme.bodySmall?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    'Miembro Premium',
+                                    style: textTheme.labelSmall?.copyWith(
+                                      color: colorScheme.onSurfaceVariant,
+                                    ),
+                                  ),
+                                ],
                               ),
+                            ),
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.logout, size: 20),
+                              color: colorScheme.onSurfaceVariant,
                             ),
                           ],
                         ),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.logout, size: 20),
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ],
+                    loading:
+                        () => const Center(
+                          child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                        ),
+                    error: (error, _) => const Icon(Icons.error_outline),
                   ),
                 ),
               ],

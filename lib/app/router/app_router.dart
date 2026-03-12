@@ -1,5 +1,5 @@
-import 'package:btg_web/features/portfolio/ui/pages/history_page.dart';
-import 'package:btg_web/features/portfolio/ui/pages/invest_page.dart';
+import 'package:btg_web/features/transactions/ui/pages/history_page.dart';
+import 'package:btg_web/features/transactions/ui/pages/invest_page.dart';
 import 'package:btg_web/features/portfolio/ui/pages/portfolio_page.dart';
 import 'package:btg_web/features/portfolio/ui/pages/profile_page.dart';
 import 'package:btg_web/features/shared/ui/layouts/main_layout.dart';

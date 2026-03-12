@@ -20,6 +20,8 @@ class GetActiveSubscriptionsUseCase {
       }
     }
 
-    return activeSubscriptions.values.toList();
+    final result = activeSubscriptions.values.toList();
+    result.sort((a, b) => (a.fundName ?? '').compareTo(b.fundName ?? ''));
+    return result;
   }
 }

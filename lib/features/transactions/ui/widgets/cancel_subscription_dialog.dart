@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../transactions/domain/entities/transaction.dart';
+import '../../domain/entities/transaction.dart';
 
 class CancelSubscriptionDialog extends StatelessWidget {
   final Transaction transaction;

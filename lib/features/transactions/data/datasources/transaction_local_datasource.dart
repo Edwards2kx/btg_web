@@ -12,9 +12,14 @@ class TransactionLocalDataSource {
     ),
   ];
 
-  Future<List<TransactionModel>> getTransactions() async {
+  Future<List<TransactionModel>> getTransactions({TransactionType? type}) async {
     // Simulate network delay
     await Future.delayed(const Duration(milliseconds: 500));
+    if (type != null) {
+      return List.unmodifiable(
+        _transactions.where((t) => t.type == type),
+      );
+    }
     return List.unmodifiable(_transactions);
   }
 

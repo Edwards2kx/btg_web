@@ -7,7 +7,7 @@ class MockTransactionRepository implements TransactionRepository {
   List<Transaction> transactionsToReturn = [];
 
   @override
-  Future<List<Transaction>> getTransactions() async {
+  Future<List<Transaction>> getTransactions({TransactionType? type}) async {
     return transactionsToReturn;
   }
 

@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../app/utils/currency_formatter.dart';
 import '../../../auth/domain/entities/user.dart';
 import '../../../transactions/di/transaction_providers.dart';
+import 'package:btg_web/features/portfolio/ui/provider/funds_provider.dart';
 
 class BalanceCard extends ConsumerWidget {
   const BalanceCard({super.key, required this.userAsync});
@@ -128,10 +129,7 @@ class BalanceCard extends ConsumerWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -140,21 +138,39 @@ class BalanceCard extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Fondos Activos',
+                        'Fondos Disponibles',
                         style: TextStyle(
                           fontSize: 11,
                           color: Colors.white.withValues(alpha: 0.65),
                         ),
                       ),
                       const SizedBox(height: 4),
-                      const Text(
-                        '12 Fondos',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
+                      ref.watch(availableFundsProvider()).when(
+                            data: (funds) => Text(
+                              '${funds.length} Fondos',
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            loading: () => const SizedBox(
+                              height: 18,
+                              width: 18,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            ),
+                            error: (_, __) => const Text(
+                              '-- Fondos',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
                     ],
                   ),
                 ),
