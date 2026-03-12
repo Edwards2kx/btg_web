@@ -1,102 +1,146 @@
 import 'package:flutter/material.dart';
-
 import '../../domain/entities/fund.dart';
+import 'subscription_dialog.dart';
 
 class FundCard extends StatelessWidget {
-  const FundCard({super.key, required this.fund, this.onSubscribe});
+  const FundCard({required this.fund, super.key});
 
   final Fund fund;
-  final VoidCallback? onSubscribe;
+
+  void _showSubscriptionDialog(BuildContext context) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => SubscriptionDialog(fund: fund),
+    );
+
+    if (result == true && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Suscripción exitosa a ${fund.name}'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
-    final (categoryLabel, categoryColor) = switch (fund.category) {
-      FundCategory.fpv => ('FPV', colorScheme.primary),
-      FundCategory.fic => ('FIC', colorScheme.tertiary),
-    };
+    final (icon, color) = _getCategoryStyle(fund.category);
+    final categoryLabel = fund.category == FundCategory.fic ? 'FIC' : 'FPV';
 
     return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header row: name + category badge
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Text(
-                    fund.name,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: color.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8),
                   ),
+                  child: Icon(icon, color: color, size: 20),
                 ),
-                const SizedBox(width: 8),
+                const Spacer(),
                 Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 4,
+                    horizontal: 8,
+                    vertical: 3,
                   ),
                   decoration: BoxDecoration(
-                    color: categoryColor.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(20),
+                    color: colorScheme.surfaceContainerHighest.withValues(
+                      alpha: 0.5,
+                    ),
+                    borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
                     categoryLabel,
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: categoryColor,
+                    style: textTheme.labelSmall?.copyWith(
                       fontWeight: FontWeight.bold,
+                      color: colorScheme.onSurfaceVariant,
+                      letterSpacing: 0.3,
+                      fontSize: 10,
                     ),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 12),
-            const Divider(height: 1),
-            const SizedBox(height: 12),
-            // Minimum amount
+            Text(
+              fund.name,
+              style: textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.',
+              style: textTheme.bodySmall?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const Spacer(),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Icon(
-                  Icons.account_balance_wallet_outlined,
-                  size: 18,
-                  color: colorScheme.onSurfaceVariant,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  'Monto mínimo',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Monto mínimo',
+                        style: textTheme.labelSmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                          fontSize: 10,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        '\$${fund.minimumAmount.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')} COP',
+                        style: textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: colorScheme.primary,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const Spacer(),
-                Text(
-                  '\$${fund.minimumAmount.toStringAsFixed(0)}',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: colorScheme.primary,
+                SizedBox(
+                  height: 36,
+                  child: FilledButton.tonal(
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      textStyle: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onPressed: () => _showSubscriptionDialog(context),
+                    child: const Text('Suscribirse'),
                   ),
                 ),
               ],
-            ),
-            const SizedBox(height: 16),
-            // Subscribe button
-            SizedBox(
-              width: double.infinity,
-              child: FilledButton.tonal(
-                onPressed: onSubscribe,
-                child: const Text('Suscribirse'),
-              ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  (IconData, Color) _getCategoryStyle(FundCategory category) {
+    return switch (category) {
+      FundCategory.fic => (Icons.show_chart, Colors.green),
+      FundCategory.fpv => (Icons.account_balance, Colors.blue),
+    };
   }
 }

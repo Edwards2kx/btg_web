@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../auth/di/user_injection.dart';
 import '../../../auth/domain/entities/user.dart';
+import '../../../transactions/di/transaction_providers.dart';
 
 final _profileUserProvider = FutureProvider.autoDispose<User>((ref) {
   return ref.watch(getUserInfoUseCaseProvider).call();
@@ -14,6 +15,7 @@ class ProfilePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userAsync = ref.watch(_profileUserProvider);
+    final balanceAsync = ref.watch(availableBalanceProvider);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -108,11 +110,25 @@ class ProfilePage extends ConsumerWidget {
                                   ),
                                 ),
                                 const SizedBox(height: 4),
-                                Text(
-                                  '\$${user.balance.toStringAsFixed(2)}',
-                                  style: theme.textTheme.titleLarge?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: colorScheme.primary,
+                                balanceAsync.when(
+                                  loading: () => const SizedBox(
+                                    height: 24,
+                                    width: 24,
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                  error: (_, __) => Text(
+                                    'Error',
+                                    style: theme.textTheme.titleLarge?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: colorScheme.error,
+                                    ),
+                                  ),
+                                  data: (balance) => Text(
+                                    '\$${balance.toStringAsFixed(2)}',
+                                    style: theme.textTheme.titleLarge?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: colorScheme.primary,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -131,3 +147,4 @@ class ProfilePage extends ConsumerWidget {
     );
   }
 }
+

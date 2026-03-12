@@ -17,7 +17,7 @@ class MainLayout extends StatelessWidget {
 
     // Use a threshold of 600px to switch between mobile and desktop/tablet layout
     if (width >= 600) {
-      return _buildLargeLayout();
+      return _buildLargeLayout(context);
     } else {
       return _buildSmallLayout();
     }
@@ -31,8 +31,8 @@ class MainLayout extends StatelessWidget {
         onDestinationSelected: _goBranch,
         destinations: const [
           NavigationDestination(
-            icon: Icon(Icons.dashboard_outlined),
-            selectedIcon: Icon(Icons.dashboard),
+            icon: Icon(Icons.grid_view_outlined),
+            selectedIcon: Icon(Icons.grid_view),
             label: 'Dashboard',
           ),
           NavigationDestination(
@@ -55,78 +55,150 @@ class MainLayout extends StatelessWidget {
     );
   }
 
-  Widget _buildLargeLayout() {
+  Widget _buildLargeLayout(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
       body: Row(
         children: [
-          NavigationRail(
-            selectedIndex: navigationShell.currentIndex,
-            onDestinationSelected: _goBranch,
-            extended: true,
-            leading: const Padding(
-              padding: EdgeInsets.symmetric(vertical: 24.0),
-              child: Text(
-                'BTG Funds',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blueAccent,
+          Container(
+            width: 260,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border(
+                right: BorderSide(
+                  color: colorScheme.outlineVariant.withValues(alpha: 0.5),
                 ),
               ),
             ),
-            trailing: Expanded(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 24.0),
+            child: Column(
+              children: [
+                // ── Logo ─────────────────────────────────────────────────
+                Padding(
+                  padding: const EdgeInsets.all(24.0),
                   child: Row(
-                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      const CircleAvatar(
-                        child: Icon(Icons.person),
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: colorScheme.primary,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Icon(
+                          Icons.account_balance_wallet,
+                          color: Colors.white,
+                          size: 24,
+                        ),
                       ),
-                      const SizedBox(width: 8),
-                      const Column(
-                        mainAxisSize: MainAxisSize.min,
+                      const SizedBox(width: 12),
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Camilo Rodriguez',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            'BTG Funds',
+                            style: textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: colorScheme.primary,
+                              height: 1.1,
+                            ),
                           ),
                           Text(
-                            'Premium Member',
-                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                            'WEALTH MANAGEMENT',
+                            style: textTheme.labelSmall?.copyWith(
+                              color: colorScheme.onSurfaceVariant.withValues(
+                                alpha: 0.7,
+                              ),
+                              letterSpacing: 0.5,
+                              fontSize: 9,
+                            ),
                           ),
                         ],
                       ),
                     ],
                   ),
                 ),
-              ),
+
+                const SizedBox(height: 16),
+
+                // ── Navigation ────────────────────────────────────────────
+                Expanded(
+                  child: NavigationRail(
+                    selectedIndex: navigationShell.currentIndex,
+                    onDestinationSelected: _goBranch,
+                    extended: true,
+                    minExtendedWidth: 260,
+                    destinations: const [
+                      NavigationRailDestination(
+                        icon: Icon(Icons.grid_view_outlined),
+                        selectedIcon: Icon(Icons.grid_view),
+                        label: Text('Dashboard'),
+                      ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.trending_up_outlined),
+                        selectedIcon: Icon(Icons.trending_up),
+                        label: Text('Invest'),
+                      ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.history_outlined),
+                        selectedIcon: Icon(Icons.history),
+                        label: Text('History'),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // ── Profile ──────────────────────────────────────────────
+                Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Row(
+                    children: [
+                      const CircleAvatar(
+                        radius: 18,
+                        backgroundImage: NetworkImage(
+                          'https://ui-avatars.com/api/?name=Camilo+Rodriguez&background=0D8ABC&color=fff',
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Camilo Rodriguez',
+                              style: textTheme.bodySmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              'Premium Member',
+                              style: textTheme.labelSmall?.copyWith(
+                                color: colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.logout, size: 20),
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            destinations: const [
-              NavigationRailDestination(
-                icon: Icon(Icons.dashboard_outlined),
-                selectedIcon: Icon(Icons.dashboard),
-                label: Text('Dashboard'),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.trending_up_outlined),
-                selectedIcon: Icon(Icons.trending_up),
-                label: Text('Invest'),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.history_outlined),
-                selectedIcon: Icon(Icons.history),
-                label: Text('History'),
-              ),
-              // Profile is handled via the trailing widget on larger screens,
-              // or we can add it here as well. Usually side navigation has Profile at bottom.
-            ],
           ),
-          const VerticalDivider(thickness: 1, width: 1),
-          Expanded(child: navigationShell),
+          Expanded(
+            child: Container(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              child: navigationShell,
+            ),
+          ),
         ],
       ),
     );

@@ -1,7 +1,5 @@
 import '../models/user_model.dart';
 
-const double kUserInitialBalance = 500000.0;
-
 class UserLocalDataSource {
   Future<UserModel> getUserInfo() async {
     //mock delay and data
@@ -10,7 +8,6 @@ class UserLocalDataSource {
       "id": "1",
       "firstName": "John",
       "lastName": "Doe",
-      "balance": kUserInitialBalance,
     };
 
     return UserModel.fromJson(json);

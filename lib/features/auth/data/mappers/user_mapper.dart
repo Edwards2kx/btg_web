@@ -7,7 +7,6 @@ class UserMapper {
       id: model.id,
       firstName: model.firstName,
       lastName: model.lastName,
-      balance: model.balance,
     );
   }
 }
