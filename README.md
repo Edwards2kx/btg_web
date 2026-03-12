@@ -33,6 +33,18 @@ Dentro de cada feature, se respeta la separación de capas:
 
 ---
 
+## 💼 Lógica de Negocio y Transacciones
+
+El manejo del saldo y las transacciones está diseñado para ser consistente e inmutable, emulando los principios de sistemas financieros reales (event sourcing simplificado):
+
+*   **Saldo Computado, no Almacenado:** El saldo actual de la cuenta del usuario no se guarda como una variable estática que se suma o resta directamente en cada operación. En su lugar, el saldo (`GetAvailableBalanceUseCase`) se calcula dinámicamente computando la sumatoria de todo el historial de transacciones. Esto previene desincronizaciones y garantiza la integridad de los datos.
+*   **El Saldo Inicial es una Transacción:** El saldo base asignado (COP \$500,000) se inyecta y persiste en el sistema como una transacción fundacional de tipo `deposit`, permitiendo que el historial cuente la historia desde el inicio.
+*   **Suscripciones y Cancelaciones Inmutables:** 
+    *   Al suscribirse a un fondo (`SubscribeToFundUseCase`), se procesa validando este saldo previamente computado contra el monto del FIC/FPV. Al tener éxito, no se resta un número, sino que se añade una transacción  de retiro (`subscription`).
+    *   Al liquidar/cancelar un fondo (`CancelSubscriptionUseCase`), **no se borra** ni edita la transacción original. Se genera una orden reversiva a modo de compensación (`cancellation`), que retorna matemáticamente el importe a favor de la cuenta del cliente preservando un rastro de auditoría completo y cronológico intacto para la página de Historial.
+
+---
+
 ## 🛠 Entorno Técnico y Herramientas
 
 *   **Framework:** Flutter (Optimizado para Web y Móvil)
@@ -90,7 +102,7 @@ A continuación, imágenes de las principales vistas de la aplicación utilizand
 ### Dashboard (Resumen de Cartera)
 Muestra el saldo disponible, visualización visual de fondos aptos para invertir, separando categorías entre FIC y FPV.
 
-![Dashboard](docs/images/dashboard.png)
+![Dashboard](docs/images/dashboard.png`)
 
 ### Inversiones y Liquidación
 Pestaña que visualiza únicamente en donde el usuario tiene suscripciones activas y le permite ejecutar la liquidación (Cancelación) de los fondos individualmente.
