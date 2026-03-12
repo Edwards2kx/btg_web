@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#001E61",
+                        "background-light": "#f6f5f8",
+                        "background-dark": "#150f23",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<title>BTG Funds - Investment Portfolio</title>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<div class="flex h-screen overflow-hidden">
+<!-- SideNavBar Component -->
+<aside class="w-72 flex-shrink-0 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col justify-between p-6">
+<div class="flex flex-col gap-8">
+<div class="flex items-center gap-3">
+<div class="bg-primary rounded-lg p-2 text-white">
+<span class="material-symbols-outlined text-3xl">account_balance_wallet</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-primary dark:text-white text-lg font-bold leading-none uppercase tracking-tight">BTG Funds</h1>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium">Investment Management</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400">dashboard</span>
+<span class="text-sm font-semibold">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary dark:bg-primary/20 dark:text-blue-400" href="#">
+<span class="material-symbols-outlined">account_balance</span>
+<span class="text-sm font-semibold">Portfolio</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400">explore</span>
+<span class="text-sm font-semibold">Marketplace</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400">receipt_long</span>
+<span class="text-sm font-semibold">Transactions</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400">settings</span>
+<span class="text-sm font-semibold">Settings</span>
+</a>
+</nav>
+</div>
+<div class="flex flex-col gap-4">
+<div class="bg-primary/5 dark:bg-primary/10 rounded-xl p-4">
+<p class="text-xs text-slate-500 dark:text-slate-400 mb-1">Total Balance</p>
+<p class="text-xl font-bold text-primary dark:text-white">$25,750.50</p>
+</div>
+<button class="w-full bg-primary text-white rounded-xl py-3 font-bold text-sm shadow-lg shadow-primary/20 flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-sm">add</span>
+                    Add Funds
+                </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto p-8">
+<header class="flex justify-between items-end mb-8">
+<div>
+<h2 class="text-3xl font-black tracking-tight text-slate-900 dark:text-white">Investment Portfolio</h2>
+<p class="text-slate-500 dark:text-slate-400">Your current asset allocation and available growth opportunities.</p>
+</div>
+<div class="flex items-center gap-2 bg-white dark:bg-slate-800 p-1 rounded-lg border border-slate-200 dark:border-slate-700">
+<button class="px-4 py-2 bg-slate-100 dark:bg-slate-700 rounded-md text-xs font-bold">Today</button>
+<button class="px-4 py-2 text-slate-400 text-xs font-bold">Monthly</button>
+<button class="px-4 py-2 text-slate-400 text-xs font-bold">Yearly</button>
+</div>
+</header>
+<!-- My Active Investments Section -->
+<section class="mb-12">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-xl font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">analytics</span>
+                        My Active Investments
+                    </h3>
+</div>
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+<table class="w-full text-left">
+<thead class="bg-slate-50 dark:bg-slate-800/50 border-bottom border-slate-200 dark:border-slate-800">
+<tr>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Fund Name</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Current Value</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Returns (YoY)</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="font-semibold text-slate-900 dark:text-white text-sm">BTG Pactual Recaudadora</span>
+<span class="text-xs text-slate-400">Conservative • Fixed Income</span>
+</div>
+</td>
+<td class="px-6 py-5 font-bold text-slate-700 dark:text-slate-300">$12,450.00</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 text-xs font-bold">+4.2%</span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-primary dark:text-blue-400 hover:underline text-sm font-bold uppercase tracking-wider">Liquidate</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="font-semibold text-slate-900 dark:text-white text-sm">BTG Pactual Ecopetrol</span>
+<span class="text-xs text-slate-400">Aggressive • Commodities</span>
+</div>
+</td>
+<td class="px-6 py-5 font-bold text-slate-700 dark:text-slate-300">$8,200.50</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 text-xs font-bold">+12.8%</span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-primary dark:text-blue-400 hover:underline text-sm font-bold uppercase tracking-wider">Liquidate</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="font-semibold text-slate-900 dark:text-white text-sm">BTG Pactual Acciones</span>
+<span class="text-xs text-slate-400">Moderate • Equity Market</span>
+</div>
+</td>
+<td class="px-6 py-5 font-bold text-slate-700 dark:text-slate-300">$5,100.00</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400 text-xs font-bold">-1.5%</span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-primary dark:text-blue-400 hover:underline text-sm font-bold uppercase tracking-wider">Liquidate</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Available Funds Catalog -->
+<section>
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-xl font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">add_shopping_cart</span>
+                        Available Funds Catalog
+                    </h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+<!-- Fund 1: Recaudadora -->
+<div class="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col hover:border-primary/50 transition-colors shadow-sm">
+<div class="h-10 w-10 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-lg flex items-center justify-center mb-4">
+<span class="material-symbols-outlined">security</span>
+</div>
+<h4 class="font-bold text-slate-900 dark:text-white leading-tight mb-1">Recaudadora</h4>
+<p class="text-xs text-slate-500 mb-4">Steady capital growth with low risk index.</p>
+<div class="mt-auto">
+<div class="mb-4">
+<p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">Min. Investment</p>
+<p class="text-lg font-bold text-primary dark:text-slate-200">$50.00</p>
+</div>
+<button class="w-full bg-primary text-white py-2 rounded-lg font-bold text-sm hover:bg-opacity-90 transition-all">Subscribe</button>
+</div>
+</div>
+<!-- Fund 2: Ecopetrol -->
+<div class="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col hover:border-primary/50 transition-colors shadow-sm">
+<div class="h-10 w-10 bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 rounded-lg flex items-center justify-center mb-4">
+<span class="material-symbols-outlined">oil_barrel</span>
+</div>
+<h4 class="font-bold text-slate-900 dark:text-white leading-tight mb-1">Ecopetrol</h4>
+<p class="text-xs text-slate-500 mb-4">Exposure to the energy sector and dividends.</p>
+<div class="mt-auto">
+<div class="mb-4">
+<p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">Min. Investment</p>
+<p class="text-lg font-bold text-primary dark:text-slate-200">$200.00</p>
+</div>
+<button class="w-full bg-primary text-white py-2 rounded-lg font-bold text-sm hover:bg-opacity-90 transition-all">Subscribe</button>
+</div>
+</div>
+<!-- Fund 3: Deudaprivada -->
+<div class="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col hover:border-primary/50 transition-colors shadow-sm">
+<div class="h-10 w-10 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 rounded-lg flex items-center justify-center mb-4">
+<span class="material-symbols-outlined">corporate_fare</span>
+</div>
+<h4 class="font-bold text-slate-900 dark:text-white leading-tight mb-1">DeudaPrivada</h4>
+<p class="text-xs text-slate-500 mb-4">Invest in top-tier corporate credit instruments.</p>
+<div class="mt-auto">
+<div class="mb-4">
+<p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">Min. Investment</p>
+<p class="text-lg font-bold text-primary dark:text-slate-200">$100.00</p>
+</div>
+<button class="w-full bg-primary text-white py-2 rounded-lg font-bold text-sm hover:bg-opacity-90 transition-all">Subscribe</button>
+</div>
+</div>
+<!-- Fund 4: Acciones -->
+<div class="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col hover:border-primary/50 transition-colors shadow-sm">
+<div class="h-10 w-10 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center mb-4">
+<span class="material-symbols-outlined">trending_up</span>
+</div>
+<h4 class="font-bold text-slate-900 dark:text-white leading-tight mb-1">Acciones</h4>
+<p class="text-xs text-slate-500 mb-4">Diversified equity portfolio for high yield.</p>
+<div class="mt-auto">
+<div class="mb-4">
+<p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">Min. Investment</p>
+<p class="text-lg font-bold text-primary dark:text-slate-200">$150.00</p>
+</div>
+<button class="w-full bg-primary text-white py-2 rounded-lg font-bold text-sm hover:bg-opacity-90 transition-all">Subscribe</button>
+</div>
+</div>
+<!-- Fund 5: Dinamica -->
+<div class="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col hover:border-primary/50 transition-colors shadow-sm">
+<div class="h-10 w-10 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 rounded-lg flex items-center justify-center mb-4">
+<span class="material-symbols-outlined">rocket_launch</span>
+</div>
+<h4 class="font-bold text-slate-900 dark:text-white leading-tight mb-1">Dinamica</h4>
+<p class="text-xs text-slate-500 mb-4">Active management for superior market performance.</p>
+<div class="mt-auto">
+<div class="mb-4">
+<p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">Min. Investment</p>
+<p class="text-lg font-bold text-primary dark:text-slate-200">$250.00</p>
+</div>
+<button class="w-full bg-primary text-white py-2 rounded-lg font-bold text-sm hover:bg-opacity-90 transition-all">Subscribe</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+</div>
+</body></html>

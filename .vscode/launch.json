@@ -1,0 +1,27 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "BTG Web (Debug)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": [
+        "--web-experimental-hot-reload",
+        "--web-renderer",
+        "html"
+      ]
+    },
+    {
+      "name": "BTG Web (CanvasKit)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": [
+        "--web-experimental-hot-reload",
+        "--web-renderer",
+        "canvaskit"
+      ]
+    }
+  ]
+}
