@@ -28,10 +28,6 @@ class CategoryFilterChip extends StatelessWidget {
       ),
       selectedColor: colorScheme.primary,
       backgroundColor: colorScheme.surface,
-      side: BorderSide(
-        color: colorScheme.outlineVariant.withValues(alpha: 0.6),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 4),
     );
   }
 }

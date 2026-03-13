@@ -9,7 +9,8 @@ import '../provider/funds_provider.dart';
 import '../widgets/balance_card.dart';
 import '../widgets/category_filter_chip.dart';
 import '../widgets/fund_card.dart';
-import '../widgets/quick_subscription_card.dart';
+import '../widgets/recent_transactions_card.dart';
+import '../../../../app/theme/theme_provider.dart';
 
 // ─── Provider ──────────────────────────────────────────────────────────────
 
@@ -35,14 +36,6 @@ class _PortfolioPageState extends ConsumerState<PortfolioPage> {
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLowest.withValues(alpha: 0.9),
-        border: Border(
-          bottom: BorderSide(
-            color: colorScheme.outlineVariant.withValues(alpha: 0.4),
-          ),
-        ),
-      ),
       child: Row(
         children: [
           if (!isMobile)
@@ -74,10 +67,7 @@ class _PortfolioPageState extends ConsumerState<PortfolioPage> {
               ),
             )
           else
-            IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: null,
-            ),
+            IconButton(icon: const Icon(Icons.search), onPressed: null),
           const SizedBox(width: 8),
           // Notifications
           Badge(
@@ -89,9 +79,76 @@ class _PortfolioPageState extends ConsumerState<PortfolioPage> {
           ),
           const SizedBox(width: 4),
           // Settings
-          IconButton.outlined(
+          PopupMenuButton<ThemeMode>(
             icon: const Icon(Icons.settings_outlined),
-            onPressed: null,
+            offset: const Offset(0, 45),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            onSelected: (mode) {
+              ref.read(themeModeNotifierProvider.notifier).setThemeMode(mode);
+            },
+            itemBuilder: (context) {
+              final currentMode = ref.watch(themeModeNotifierProvider);
+              return [
+                const PopupMenuItem<ThemeMode>(
+                  enabled: false,
+                  height: 32,
+                  child: Text(
+                    'Apariencia',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                ),
+                PopupMenuItem<ThemeMode>(
+                  value: ThemeMode.light,
+                  child: Row(
+                    children: [
+                      Icon(Icons.light_mode_outlined, size: 20),
+                      const SizedBox(width: 12),
+                      Text('Modo claro'),
+                      if (currentMode == ThemeMode.light) ...[
+                        const SizedBox(width: 12),
+                        Icon(Icons.check, size: 20),
+                      ],
+                    ],
+                  ),
+                ),
+                PopupMenuItem<ThemeMode>(
+                  value: ThemeMode.dark,
+                  child: Row(
+                    children: [
+                      Icon(Icons.dark_mode_outlined, size: 20),
+                      const SizedBox(width: 12),
+                      Text('Modo oscuro'),
+                      if (currentMode == ThemeMode.dark) ...[
+                        const SizedBox(width: 12),
+                        Icon(Icons.check, size: 20),
+                      ],
+                    ],
+                  ),
+                ),
+                const PopupMenuDivider(),
+                PopupMenuItem<ThemeMode>(
+                  value: ThemeMode.system,
+                  child: Row(
+                    children: [
+                      Icon(Icons.devices_outlined, size: 20),
+                      const SizedBox(width: 12),
+                      Text('Sistema'),
+                      if (currentMode == ThemeMode.system) ...[
+                        const SizedBox(width: 12),
+                        Icon(Icons.check, size: 20),
+                      ],
+                    ],
+                  ),
+                ),
+              ];
+            },
           ),
         ],
       ),
@@ -115,19 +172,22 @@ class _PortfolioPageState extends ConsumerState<PortfolioPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ── Balance + Quick Subscription row ─────────────────
+                // ── Balance + Recent Transactions row ─────────────────
                 LayoutBuilder(
                   builder: (context, constraints) {
                     final isWide = constraints.maxWidth > 700;
-                    final balanceCard = BalanceCard(userAsync: userAsync);
-                    final quickCard = const QuickSubscriptionCard();
+                    final balanceCard = BalanceCard(
+                      userAsync: userAsync,
+                      isMobile: isMobile,
+                    );
+                    final recentTransactionsCard = const RecentTransactionsCard();
                     if (isWide) {
                       return Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(flex: 2, child: balanceCard),
+                          Expanded(flex: 5, child: balanceCard),
                           const SizedBox(width: 16),
-                          Expanded(child: quickCard),
+                          Expanded(flex: 4, child: recentTransactionsCard),
                         ],
                       );
                     }
@@ -135,7 +195,7 @@ class _PortfolioPageState extends ConsumerState<PortfolioPage> {
                       children: [
                         balanceCard,
                         const SizedBox(height: 16),
-                        quickCard,
+                        recentTransactionsCard,
                       ],
                     );
                   },
@@ -162,19 +222,27 @@ class _PortfolioPageState extends ConsumerState<PortfolioPage> {
                             CategoryFilterChip(
                               label: 'Todos',
                               isSelected: _selectedCategory == null,
-                              onTap: () => setState(() => _selectedCategory = null),
+                              onTap:
+                                  () =>
+                                      setState(() => _selectedCategory = null),
                             ),
                             const SizedBox(width: 8),
                             CategoryFilterChip(
                               label: 'FIC',
                               isSelected: _selectedCategory == FundCategory.fic,
-                              onTap: () => setState(() => _selectedCategory = FundCategory.fic),
+                              onTap:
+                                  () => setState(
+                                    () => _selectedCategory = FundCategory.fic,
+                                  ),
                             ),
                             const SizedBox(width: 8),
                             CategoryFilterChip(
                               label: 'FPV',
                               isSelected: _selectedCategory == FundCategory.fpv,
-                              onTap: () => setState(() => _selectedCategory = FundCategory.fpv),
+                              onTap:
+                                  () => setState(
+                                    () => _selectedCategory = FundCategory.fpv,
+                                  ),
                             ),
                           ],
                         ),
@@ -201,13 +269,19 @@ class _PortfolioPageState extends ConsumerState<PortfolioPage> {
                       CategoryFilterChip(
                         label: 'FIC',
                         isSelected: _selectedCategory == FundCategory.fic,
-                        onTap: () => setState(() => _selectedCategory = FundCategory.fic),
+                        onTap:
+                            () => setState(
+                              () => _selectedCategory = FundCategory.fic,
+                            ),
                       ),
                       const SizedBox(width: 8),
                       CategoryFilterChip(
                         label: 'FPV',
                         isSelected: _selectedCategory == FundCategory.fpv,
-                        onTap: () => setState(() => _selectedCategory = FundCategory.fpv),
+                        onTap:
+                            () => setState(
+                              () => _selectedCategory = FundCategory.fpv,
+                            ),
                       ),
                     ],
                   ),
@@ -216,24 +290,33 @@ class _PortfolioPageState extends ConsumerState<PortfolioPage> {
 
                 // ── Fund Cards Grid ───────────────────────────────────
                 fundsAsync.when(
-                  loading: () => const Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 40),
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
-                  error: (err, _) => Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 40),
-                      child: Column(
-                        children: [
-                          const Icon(Icons.error_outline, color: Colors.red, size: 48),
-                          const SizedBox(height: 16),
-                          Text('Error al cargar los fondos: $err', style: textTheme.bodyMedium),
-                        ],
+                  loading:
+                      () => const Center(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 40),
+                          child: CircularProgressIndicator(),
+                        ),
                       ),
-                    ),
-                  ),
+                  error:
+                      (err, _) => Center(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 40),
+                          child: Column(
+                            children: [
+                              const Icon(
+                                Icons.error_outline,
+                                color: Colors.red,
+                                size: 48,
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                'Error al cargar los fondos: $err',
+                                style: textTheme.bodyMedium,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                   data: (funds) {
                     if (funds.isEmpty) {
                       return Center(
@@ -251,13 +334,19 @@ class _PortfolioPageState extends ConsumerState<PortfolioPage> {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: isMobile ? 1 : (MediaQuery.of(context).size.width > 1100 ? 3 : 2),
+                        crossAxisCount:
+                            isMobile
+                                ? 1
+                                : (MediaQuery.of(context).size.width > 1100
+                                    ? 3
+                                    : 2),
                         crossAxisSpacing: 16,
                         mainAxisSpacing: 16,
                         childAspectRatio: isMobile ? 1.4 : 1.6,
                       ),
                       itemCount: funds.length,
-                      itemBuilder: (context, index) => FundCard(fund: funds[index]),
+                      itemBuilder:
+                          (context, index) => FundCard(fund: funds[index]),
                     );
                   },
                 ),

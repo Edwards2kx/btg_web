@@ -37,7 +37,7 @@ void main() {
     expect(result, isEmpty);
   });
 
-  test('should return list of active subscriptions resolving cancellations', () async {
+  test('should return list of active subscriptions grouping by fund and evaluating cancellations', () async {
     // Arrange
     repository.transactionsToReturn = [
       Transaction(
@@ -46,7 +46,7 @@ void main() {
         amount: 500000.0,
         type: TransactionType.deposit,
       ),
-      Transaction( // Subscribed to FPV_BTG_PACTUAL_RECAUDADORA
+      Transaction( // Subscribed to FPV_BTG_PACTUAL_RECAUDADORA (First time) - 75k
         id: '2',
         fundId: '1',
         fundName: 'FPV_BTG_PACTUAL_RECAUDADORA',
@@ -54,7 +54,7 @@ void main() {
         amount: 75000.0,
         type: TransactionType.subscription,
       ),
-      Transaction( // Subscribed to FPV_BTG_PACTUAL_ECOPETROL
+      Transaction( // Subscribed to FPV_BTG_PACTUAL_ECOPETROL - 125k
         id: '3',
         fundId: '2',
         fundName: 'FPV_BTG_PACTUAL_ECOPETROL',
@@ -62,12 +62,28 @@ void main() {
         amount: 125000.0,
         type: TransactionType.subscription,
       ),
-      Transaction( // Cancelled FPV_BTG_PACTUAL_RECAUDADORA
+      Transaction( // Subscribed to FPV_BTG_PACTUAL_RECAUDADORA (Second time) - 20k
         id: '4',
         fundId: '1',
         fundName: 'FPV_BTG_PACTUAL_RECAUDADORA',
         date: DateTime.now(),
-        amount: 75000.0,
+        amount: 20000.0,
+        type: TransactionType.subscription,
+      ),
+      Transaction( // Partial liquidation of FPV_BTG_PACTUAL_ECOPETROL - 50k
+        id: '5',
+        fundId: '2',
+        fundName: 'FPV_BTG_PACTUAL_ECOPETROL',
+        date: DateTime.now(),
+        amount: 50000.0,
+        type: TransactionType.cancellation,
+      ),
+      Transaction( // Full liquidation of FPV_BTG_PACTUAL_RECAUDADORA - 95k
+        id: '6',
+        fundId: '1',
+        fundName: 'FPV_BTG_PACTUAL_RECAUDADORA',
+        date: DateTime.now(),
+        amount: 95000.0,
         type: TransactionType.cancellation,
       ),
     ];
@@ -76,10 +92,12 @@ void main() {
     final result = await useCase.call();
 
     // Assert
-    // Verify there is only one active subscription (EcoPetrol) because Recaudadora was cancelled.
-    expect(
-        result,
-        predicate((List<Transaction> list) =>
-            list.length == 1 && list.first.fundId == '2'));
+    // Verify there is only one active subscription remaining:
+    // Recaudadora: 75k + 20k - 95k = 0 (Should be removed)
+    // Ecopetrol: 125k - 50k = 75k (Should remain)
+    expect(result.length, equals(1));
+    final ecopetrol = result.first;
+    expect(ecopetrol.fundId, equals('2'));
+    expect(ecopetrol.amount, equals(75000.0));
   });
 }

@@ -14,9 +14,31 @@ class GetActiveSubscriptionsUseCase {
       if (transaction.fundId == null) continue;
 
       if (transaction.type == TransactionType.subscription) {
-        activeSubscriptions[transaction.fundId!] = transaction;
+        if (activeSubscriptions.containsKey(transaction.fundId!)) {
+          // Accumulate the amount for the same fund
+          final existing = activeSubscriptions[transaction.fundId!]!;
+          activeSubscriptions[transaction.fundId!] = existing.copyWith(
+            amount: existing.amount + transaction.amount,
+          );
+        } else {
+          // Add new fund subscription
+          activeSubscriptions[transaction.fundId!] = transaction;
+        }
       } else if (transaction.type == TransactionType.cancellation) {
-        activeSubscriptions.remove(transaction.fundId!);
+        if (activeSubscriptions.containsKey(transaction.fundId!)) {
+          // Subtract the cancelled amount
+          final existing = activeSubscriptions[transaction.fundId!]!;
+          final newAmount = existing.amount - transaction.amount;
+          
+          // Using a small epsilon to account for floating-point inaccuracies
+          if (newAmount <= 0.01) { 
+            activeSubscriptions.remove(transaction.fundId!);
+          } else {
+            activeSubscriptions[transaction.fundId!] = existing.copyWith(
+              amount: newAmount,
+            );
+          }
+        }
       }
     }
 

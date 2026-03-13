@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../domain/repositories/transaction_repository.dart';
@@ -73,4 +74,58 @@ Future<List<Transaction>> activeSubscriptions(ActiveSubscriptionsRef ref) {
 bool isValidInvestmentAmount(IsValidInvestmentAmountRef ref, double amount) {
   final balance = ref.watch(availableBalanceProvider).valueOrNull ?? 0.0;
   return amount <= balance;
+}
+
+@riverpod
+class SubscriptionController extends _$SubscriptionController {
+  @override
+  FutureOr<void> build() {}
+
+  Future<void> subscribe({
+    required String fundId,
+    required String fundName,
+    required double amount,
+    required NotificationMethod notificationMethod,
+  }) async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      final subscribeUseCase = ref.read(subscribeToFundUseCaseProvider);
+      await subscribeUseCase.call(
+        fundId: fundId,
+        fundName: fundName,
+        amount: amount,
+        notificationMethod: notificationMethod,
+      );
+
+      ref.invalidate(availableBalanceProvider);
+      ref.invalidate(activeSubscriptionsProvider);
+      ref.invalidate(transactionHistoryProvider);
+    });
+  }
+}
+
+@riverpod
+class CancelSubscriptionController extends _$CancelSubscriptionController {
+  @override
+  FutureOr<void> build() {}
+
+  Future<void> cancel({
+    required String fundId,
+    required String fundName,
+    required double amount,
+  }) async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      final cancelUseCase = ref.read(cancelSubscriptionUseCaseProvider);
+      await cancelUseCase.call(
+        fundId: fundId,
+        fundName: fundName,
+        amount: amount,
+      );
+
+      ref.invalidate(availableBalanceProvider);
+      ref.invalidate(activeSubscriptionsProvider);
+      ref.invalidate(transactionHistoryProvider);
+    });
+  }
 }

@@ -19,4 +19,24 @@ class Transaction {
     required this.type,
     this.notificationMethod,
   });
+
+  Transaction copyWith({
+    String? id,
+    String? fundId,
+    String? fundName,
+    DateTime? date,
+    double? amount,
+    TransactionType? type,
+    NotificationMethod? notificationMethod,
+  }) {
+    return Transaction(
+      id: id ?? this.id,
+      fundId: fundId ?? this.fundId,
+      fundName: fundName ?? this.fundName,
+      date: date ?? this.date,
+      amount: amount ?? this.amount,
+      type: type ?? this.type,
+      notificationMethod: notificationMethod ?? this.notificationMethod,
+    );
+  }
 }
