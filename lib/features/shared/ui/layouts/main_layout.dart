@@ -33,17 +33,17 @@ class MainLayout extends ConsumerWidget {
           NavigationDestination(
             icon: Icon(Icons.grid_view_outlined),
             selectedIcon: Icon(Icons.grid_view),
-            label: 'Portafolio',
+            label: 'Fondos',
           ),
           NavigationDestination(
             icon: Icon(Icons.trending_up_outlined),
             selectedIcon: Icon(Icons.trending_up),
-            label: 'Invertir',
+            label: 'Mi portafolio',
           ),
           NavigationDestination(
             icon: Icon(Icons.history_outlined),
             selectedIcon: Icon(Icons.history),
-            label: 'Historial',
+            label: 'Transacciones',
           ),
           NavigationDestination(
             icon: Icon(Icons.person_outline),
@@ -66,7 +66,7 @@ class MainLayout extends ConsumerWidget {
           Container(
             width: 260,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: colorScheme.surface,
               border: Border(
                 right: BorderSide(
                   color: colorScheme.outlineVariant.withValues(alpha: 0.5),
@@ -83,12 +83,12 @@ class MainLayout extends ConsumerWidget {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: colorScheme.primary,
+                          color: colorScheme.onPrimary,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: const Icon(
                           Icons.account_balance_wallet,
-                          color: Colors.white,
+                          // color: Colors.white,
                           size: 24,
                         ),
                       ),
@@ -125,23 +125,24 @@ class MainLayout extends ConsumerWidget {
                 // ── Navigation ────────────────────────────────────────────
                 Expanded(
                   child: NavigationDrawer(
+                    backgroundColor: Colors.transparent,
                     selectedIndex: navigationShell.currentIndex,
                     onDestinationSelected: _goBranch,
                     children: const [
                       NavigationDrawerDestination(
                         icon: Icon(Icons.grid_view_outlined),
                         selectedIcon: Icon(Icons.grid_view),
-                        label: Text('Portafolio'),
+                        label: Text('Fondos'),
                       ),
                       NavigationDrawerDestination(
                         icon: Icon(Icons.trending_up_outlined),
                         selectedIcon: Icon(Icons.trending_up),
-                        label: Text('Invertir'),
+                        label: Text('Mi portafolio'),
                       ),
                       NavigationDrawerDestination(
                         icon: Icon(Icons.history_outlined),
                         selectedIcon: Icon(Icons.history),
-                        label: Text('Historial'),
+                        label: Text('Transacciones'),
                       ),
                     ],
                   ),

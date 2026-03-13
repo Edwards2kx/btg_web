@@ -88,10 +88,6 @@ class AppTheme {
           fontWeight: FontWeight.bold,
           color: Colors.white,
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-          side: const BorderSide(color: Color(0xFFE2E8F0)),
-        ),
         pressElevation: 0,
       ),
       searchBarTheme: SearchBarThemeData(

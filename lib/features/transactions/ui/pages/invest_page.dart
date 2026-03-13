@@ -22,26 +22,16 @@ class _InvestPageState extends ConsumerState<InvestPage> {
       builder: (context) => CancelSubscriptionDialog(transaction: transaction),
     );
 
-    if (confirmed != true) return;
-
-    final cancelUseCase = ref.read(cancelSubscriptionUseCaseProvider);
-    await cancelUseCase.call(
-      fundId: transaction.fundId ?? '',
-      fundName: transaction.fundName ?? '',
-      amount: transaction.amount,
-    );
-
-    ref.invalidate(availableBalanceProvider);
-    ref.invalidate(activeSubscriptionsProvider);
-    ref.invalidate(transactionHistoryProvider);
-
-    if (mounted) {
+    if (confirmed == true && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
             'Inversión en ${transaction.fundName} liquidada con éxito.',
           ),
-          backgroundColor: Colors.green,
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          margin: const EdgeInsets.all(24),
         ),
       );
     }
