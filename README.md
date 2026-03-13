@@ -93,23 +93,88 @@ flutter run -d chrome
 
 ---
 
-## 📸 Pantallas (Visualización de la Web)
+## 🌗 Tema del Sistema
 
-A continuación, imágenes de las principales vistas de la aplicación utilizando datos simulados para ilustrar el portafolio y los requerimientos del caso de uso.
+La aplicación respeta el **tema del sistema operativo** (claro u oscuro) de forma predeterminada. Adicionalmente, el usuario puede cambiar el tema manualmente usando el **ícono de tema** ubicado en la esquina superior derecha de la barra de navegación, sin necesidad de reiniciar la aplicación.
 
-> **Nota para el desarrollador:** Agrega las imágenes reales dentro de la carpeta `docs/images/` en la raíz del proyecto para que puedan renderizarse aquí.
+---
 
-### Dashboard (Resumen de Cartera)
-Muestra el saldo disponible, visualización visual de fondos aptos para invertir, separando categorías entre FIC y FPV.
+## 📱 Diseño Responsivo (Desktop y Mobile)
 
-![Dashboard](docs/images/dashboard.png`)
+La interfaz se adapta automáticamente al tamaño de pantalla gracias al componente `ResponsiveLayoutBuilder`:
 
-### Inversiones y Liquidación
-Pestaña que visualiza únicamente en donde el usuario tiene suscripciones activas y le permite ejecutar la liquidación (Cancelación) de los fondos individualmente.
+| Plataforma | Navegación | Diseño |
+|---|---|---|
+| **Desktop / Web** | `NavigationRail` lateral izquierdo | Contenido en columnas amplias con tablas |
+| **Mobile** | `NavigationBar` inferior | Tarjetas apiladas en formato lista |
 
-![Liquidación de Inversiones](docs/images/investments.png)
+Las tres secciones principales del menú lateral (Desktop) o barra inferior (Mobile) son:
 
-### Historial de Transacciones
-Muestra un registro tabular claro e inmutable de todas las acciones del cliente (Depósitos iniciales, Suscripciones, Cancelaciones), ordenados cronológicamente.
+| Ícono | Sección | Descripción |
+|---|---|---|
+| 🔲 | **Fondos** | Catálogo de fondos de inversión disponibles (FPV / FIC) para suscribirse |
+| 📈 | **Mi portafolio** | Suscripciones activas del usuario con opción de liquidación por fondo |
+| 🕐 | **Transacciones** | Historial cronológico e inmutable de depósitos, suscripciones y cancelaciones |
 
-![Historial de Transacciones](docs/images/history.png)
+> En **mobile**, adicionalmente se muestra la opción **Perfil** en la barra de navegación inferior.
+
+---
+
+## 📸 Pantallas
+
+A continuación se muestran las principales vistas de la aplicación con datos simulados, en sus variantes de tema claro, oscuro y mobile.
+
+### Fondos BTG
+
+Vista del catálogo de fondos disponibles para invertir.
+
+**Tema Claro (Desktop)**
+![Fondos - Tema Claro](docs/images/fondos_light.png)
+
+**Tema Oscuro (Desktop)**
+![Fondos - Tema Oscuro](docs/images/fondos_dark.png)
+
+**Mobile (Tema Oscuro)**
+![Fondos - Mobile](docs/images/fondos_mobile_dark.png)
+
+---
+
+### Mi Portafolio
+
+Muestra las suscripciones activas del usuario y permite liquidar cada fondo individualmente.
+
+**Tema Claro (Desktop)**
+![Mi Portafolio - Tema Claro](docs/images/mi_portafolio_light.png)
+
+**Tema Oscuro (Desktop)**
+![Mi Portafolio - Tema Oscuro](docs/images/mi_portafolio_dark.png)
+
+> 📐 **Diseño adaptativo:** En Desktop, las inversiones activas se presentan en una **tabla** con columnas (Nombre del Fondo, Valor Actual, Acción). En Mobile, el layout cambia automáticamente a un **listado de tarjetas apiladas**, optimizando la legibilidad y el espacio en pantallas pequeñas sin perder ninguna funcionalidad.
+
+---
+
+### Transacciones
+
+Registro tabular inmutable de todas las transacciones: depósitos iniciales, suscripciones y cancelaciones, con filtros por tipo.
+
+**Tema Claro (Desktop)**
+![Transacciones - Tema Claro](docs/images/transacciones_light.png)
+
+**Tema Oscuro (Desktop)**
+![Transacciones - Tema Oscuro](docs/images/transacciones_dark.png)
+
+---
+
+### Suscribirse a un Fondo (Diálogo)
+
+Al intentar suscribirse a un fondo, se despliega un diálogo de confirmación que permite ingresar el monto a invertir, seleccionar el método de notificación (Email o SMS) y valida en tiempo real que el saldo sea suficiente.
+
+![Diálogo - Fondos Insuficientes](docs/images/dialogo_fondos_insuficientes.png)
+
+---
+
+### Selector de Tema
+
+El usuario puede alternar entre tema claro y oscuro desde el ícono ubicado en la parte superior de la interfaz.
+
+![Configuración de Tema](docs/images/menu_configuracion_tema.png)
